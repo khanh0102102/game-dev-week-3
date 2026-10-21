@@ -137,26 +137,12 @@ public static class CompositeColliderPracticeSetup
 
     private static GameObject CreateOrUpdateGingerPrefab(Sprite gingerSprite)
     {
-        GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath);
-        GameObject source;
-
-        if (prefab == null)
-        {
-            source = new GameObject("Ginger");
-            source.AddComponent<SpriteRenderer>();
-            source.AddComponent<Rigidbody2D>();
-            source.AddComponent<CapsuleCollider2D>();
-            source.AddComponent<GingerPlatformerController>();
-        }
-        else
-        {
-            // Build a clean source so the required physics settings are deterministic.
-            source = new GameObject("Ginger");
-            source.AddComponent<SpriteRenderer>();
-            source.AddComponent<Rigidbody2D>();
-            source.AddComponent<CapsuleCollider2D>();
-            source.AddComponent<GingerPlatformerController>();
-        }
+        // Build a clean source so the required physics settings are deterministic.
+        GameObject source = new GameObject("Ginger");
+        source.AddComponent<SpriteRenderer>();
+        source.AddComponent<Rigidbody2D>();
+        source.AddComponent<CapsuleCollider2D>();
+        source.AddComponent<GingerPlatformerController>();
 
         SpriteRenderer spriteRenderer = source.GetComponent<SpriteRenderer>();
         spriteRenderer.sprite = gingerSprite;
