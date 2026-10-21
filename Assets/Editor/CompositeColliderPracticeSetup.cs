@@ -28,7 +28,7 @@ public static class CompositeColliderPracticeSetup
     [MenuItem("Tools/Week 3/Build Composite Collider Practice")]
     private static void BuildFromMenu()
     {
-        if (File.Exists(ScenePath) &&
+        if (AssetDatabase.LoadAssetAtPath<SceneAsset>(ScenePath) != null &&
             !EditorUtility.DisplayDialog(
                 "Rebuild Practice Scene",
                 "This replaces the generated practice scene and Ginger prefab. Continue?",
@@ -43,7 +43,7 @@ public static class CompositeColliderPracticeSetup
 
     private static void GenerateSceneIfMissing()
     {
-        if (EditorApplication.isPlayingOrWillChangePlaymode || File.Exists(ScenePath))
+        if (EditorApplication.isPlayingOrWillChangePlaymode || AssetDatabase.LoadAssetAtPath<SceneAsset>(ScenePath) != null)
             return;
 
         try
@@ -223,12 +223,12 @@ public static class CompositeColliderPracticeSetup
 
     private static Sprite CreateSprite(string assetPath, int width, int height, Color32[] pixels)
     {
-        if (!File.Exists(assetPath))
+        if (!File.Exists(AbsoluteAssetPath(assetPath)))
         {
             Texture2D texture = new Texture2D(width, height, TextureFormat.RGBA32, false);
             texture.SetPixels32(pixels);
             texture.Apply();
-            File.WriteAllBytes(Path.GetFullPath(assetPath), texture.EncodeToPNG());
+            File.WriteAllBytes(AbsoluteAssetPath(assetPath), texture.EncodeToPNG());
             UnityEngine.Object.DestroyImmediate(texture);
         }
 
@@ -328,6 +328,12 @@ public static class CompositeColliderPracticeSetup
             for (int x = Mathf.Max(0, xMin); x < Mathf.Min(width, xMaxExclusive); x++)
                 pixels[y * width + x] = color;
         }
+    }
+
+    private static string AbsoluteAssetPath(string assetPath)
+    {
+        string projectRoot = Directory.GetParent(Application.dataPath).FullName;
+        return Path.Combine(projectRoot, assetPath.Replace('/', Path.DirectorySeparatorChar));
     }
 
     private static void EnsureFolder(string path)
